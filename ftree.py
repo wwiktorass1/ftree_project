@@ -130,14 +130,44 @@ def read_csv_file(filename: str) -> List[Dict[str, Any]]:
             sample = file.read(1024)
             file.seek(0)
             
-            sniffer = csv.Sniffer()
-            delimiter = sniffer.sniff(sample).delimiter
+            # Bandome automatiškai nustatyti delimiter
+            delimiter = ','  # Default delimiter
             
+            try:
+                sniffer = csv.Sniffer()
+                detected_delimiter = sniffer.sniff(sample).delimiter
+                delimiter = detected_delimiter
+            except csv.Error:
+                # Jei sniffer neveikia, bandome įprastus delimiter'ius
+                possible_delimiters = [',', ';', '\t', '|']
+                max_columns = 0
+                best_delimiter = ','
+                
+                for test_delimiter in possible_delimiters:
+                    file.seek(0)
+                    test_reader = csv.reader(file, delimiter=test_delimiter)
+                    try:
+                        first_row = next(test_reader)
+                        if len(first_row) > max_columns:
+                            max_columns = len(first_row)
+                            best_delimiter = test_delimiter
+                    except (StopIteration, csv.Error):
+                        continue
+                
+                delimiter = best_delimiter
+                print(f"Naudojamas delimiter: '{delimiter}'", file=sys.stderr)
+            
+            file.seek(0)
             reader = csv.DictReader(file, delimiter=delimiter)
             data = []
             
             for row in reader:
-                cleaned_row = {key.strip(): value for key, value in row.items()}
+                cleaned_row = {}
+                for key, value in row.items():
+                    if key is not None:
+                        cleaned_key = key.strip()
+                        cleaned_value = value.strip() if value is not None else ''
+                        cleaned_row[cleaned_key] = cleaned_value
                 data.append(cleaned_row)
                 
             return data

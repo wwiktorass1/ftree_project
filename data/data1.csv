@@ -1,5 +1,6 @@
-database,table,column,type,title
+ database,table,column,type,title
+
 DB,,,,Database name
-,TBL,,,Table name
+,TBL,,Table name,
 ,,COL1,integer,Column 1
 ,,COL2,string,Column 2
