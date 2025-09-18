@@ -41,11 +41,11 @@ python ftree.py data/data1.csv -d database,table,column
 
 **Rezultatas:**
 ```
-database | table | column | type    | title         | nodes
-DB       |       |        |         | Database name | 1
-         | TBL   |        | Table name |            | 2
-         |       | COL1   | integer | Column 1      | 
-         |       | COL2   | string  | Column 2      | 
+database | table | column | type       | title         | nodes
+DB       |       |        |            | Database name | 1
+         | TBL   |        | Table name |               | 2
+         |       | COL1   | integer    | Column 1      | 
+         |       | COL2   | string     | Column 2      | 
 ```
 
 ---
